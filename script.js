@@ -1,5 +1,26 @@
 const container = document.querySelector('.container')
 
+
+container.addEventListener('mouseover', (e)=>{
+    e.target.style.backgroundColor = 'black'
+    console.log(e.target)
+})
+
+function createGrid(n){
+    for(let i = 0; i < n*n; i++){
+        const squ = document.createElement('div');
+    
+        squ.style = `
+            width: calc(85vw/${n}); 
+            height: calc(85vw/${n}); 
+            background-color: green;
+            border: 1px solid red;
+        `;
+        container.appendChild(squ);
+    }
+}
+
+createGrid(3)
 /*
 16x16 grid of square divs.
 
@@ -7,7 +28,7 @@ divs using JavaScript
 
 grid squares inside another “container”
 
-flexbox to make the divs appear as a grid 
+flexbox to make the divs appear as a grid
 
 borders and margins adjust the size of the squares!
 
