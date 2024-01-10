@@ -1,7 +1,19 @@
 const container = document.querySelector('.container');
 const numSize = document.querySelector('#num-size');
 const rangeSize = document.querySelector('#range-size');
+let size;
 
+window.addEventListener('resize', sizeGrid);
+
+function sizeGrid(){
+    if(screen.width > screen.height){
+        size = screen.height * 0.75;
+    } else {
+        size = screen.width * 0.75;
+    }
+    container.style.width = `${size}px`;
+    container.style.height = `${size}px`;
+}
 
 container.addEventListener('mouseover', (e)=>{
     if(e.target != container) {
@@ -17,8 +29,8 @@ function createGrid(n){
         const squ = document.createElement('div');
     
         squ.style = `
-            width: calc(85vw/${n}); 
-            height: calc(85vw/${n}); 
+            width: calc(${size/n}px); 
+            height: calc(${size/n}px); 
             border: 0.1px dashed black;
             backgroundColor: white;
         `;
@@ -43,7 +55,9 @@ numSize.addEventListener('input', newGrid);
 
 rangeSize.addEventListener('input', newGrid);
 
-createGrid(16)
+sizeGrid();
+createGrid(16);
+
 /*
 16x16 grid of square divs.
 
