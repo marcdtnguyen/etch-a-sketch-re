@@ -2,6 +2,7 @@ const container = document.querySelector('.container');
 const numSize = document.querySelector('#num-size');
 const rangeSize = document.querySelector('#range-size');
 let size;
+const inks = Array.from(document.querySelectorAll('input[name=ink]'));
 
 window.addEventListener('resize', sizeGrid);
 
@@ -16,10 +17,40 @@ function sizeGrid(){
 }
 
 container.addEventListener('mouseover', (e)=>{
-    if(e.target != container) {
-    e.target.style.backgroundColor = 'black';
+    const t = e.target
+    if(t == container) return;
+    const ink = inks.filter(ink=>ink.checked)[0].value
+    let bg;
+    switch(ink){
+        case 'black': bg = 'rgb(0,0,0)';
+        break;
+        case 'random': bg = genRand();
+        break;
+        case 'darken': bg = genDark(t.style.backgroundColor);
+        break;
+        default:;
+        break;
     }
+    t.style.backgroundColor = bg;
 })
+
+function getRand(n){
+    return Math.floor(Math.random()*n);
+}
+
+function genRand(){
+    return `rgb(${getRand(255)},${getRand(255)},${getRand(255)})`
+}
+
+function genDark(old){
+    const dec = 255*0.1;
+    if(old == '') return `rgb(${255-dec}, ${255-dec},${255-dec})`
+    const rgb = old.slice(4,-1).split(',').map(n=>{
+        if(n<=dec) return 0;
+        return n - dec;
+    })
+    return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`
+}
 
 function createGrid(n){
     const grid = document.createElement('div');
@@ -40,8 +71,6 @@ function createGrid(n){
 
 function newGrid(e){
     const value = e.target.value;
-    console.log(value);
-    console.log(isNaN(value))
     if(value > 0 && value <= 100){
         if (e.target == numSize) rangeSize.value = value;
         if (e.target == rangeSize) numSize.value = value;
@@ -57,46 +86,3 @@ rangeSize.addEventListener('input', newGrid);
 
 sizeGrid();
 createGrid(16);
-
-/*
-16x16 grid of square divs.
-
-divs using JavaScript
-
-grid squares inside another “container”
-
-flexbox to make the divs appear as a grid
-
-borders and margins adjust the size of the squares!
-
-“hover” effect so that the grid divs change color when your mouse passes over them, l
-eaving a (pixelated) trail through your grid like a pen would.
-
-Hint: “Hovering” is what happens when your mouse enters a div and ends when your mouse leaves it.
- You can set up event listeners for either of those events as a starting point.
-
-changing the div’s background color using JavaScript.
-
-Add a button to the top of the screen that will send the user a popup
-asking for the number of squares per side for the new grid. 
-
-Once entered, the existing grid should be removed and a new grid should be generated in the same total space as before (e.g. 960px wide)
- so that you’ve got a new sketch pad. Tip: Set the limit for the user input to a maximum of 100. 
-
-A larger number of squares results in more computer resources being used, 
- potentially causing delays, freezing, or crashing that we want to prevent.
-
-Research button tags in HTML and how you can make a JavaScript function run when one is clicked.
-
-Also check out prompts.
-
-You should be able to enter 64 and have a brand new 64x64 grid pop up without changing the total amount of pixels used.
-
-each interaction should randomize the square’s RGB value entirely.
-
-darkening each interaction adds 10% more black or color to the square. 
-
-The objective is to achieve a completely black square only after ten interactions.
-
-You can choose to do either one or both of these challenges, it’s up to you.
-*/
