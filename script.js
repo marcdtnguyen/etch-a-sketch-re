@@ -1,26 +1,49 @@
-const container = document.querySelector('.container')
+const container = document.querySelector('.container');
+const numSize = document.querySelector('#num-size');
+const rangeSize = document.querySelector('#range-size');
 
 
 container.addEventListener('mouseover', (e)=>{
-    e.target.style.backgroundColor = 'black'
-    console.log(e.target)
+    if(e.target != container) {
+    e.target.style.backgroundColor = 'black';
+    }
 })
 
 function createGrid(n){
+    const grid = document.createElement('div');
+    grid.className = 'grid';
+    container.appendChild(grid);
     for(let i = 0; i < n*n; i++){
         const squ = document.createElement('div');
     
         squ.style = `
             width: calc(85vw/${n}); 
             height: calc(85vw/${n}); 
-            background-color: green;
-            border: 1px solid red;
+            border: 0.1px dashed black;
+            backgroundColor: white;
         `;
-        container.appendChild(squ);
+        grid.appendChild(squ);
     }
 }
 
-createGrid(3)
+function newGrid(e){
+    const value = e.target.value;
+    console.log(value);
+    console.log(isNaN(value))
+    if(value > 0 && value <= 100){
+        if (e.target == numSize) rangeSize.value = value;
+        if (e.target == rangeSize) numSize.value = value;
+        const grid = document.querySelector('.grid');
+        container.removeChild(grid)
+        createGrid(value);
+    }
+}
+
+numSize.addEventListener('input', newGrid);
+
+rangeSize.addEventListener('input', newGrid);
+
+createGrid(16)
 /*
 16x16 grid of square divs.
 
